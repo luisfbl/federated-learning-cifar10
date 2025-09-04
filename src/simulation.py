@@ -1,14 +1,11 @@
-from src.model import CNet, train, test
-from src.utils import load_cifar10
+from flwr.simulation.run_simulation import run_simulation
+from src.server import server
+from src.client import client
 
 if __name__ == '__main__':
-    trainloader, valloader, testloader = load_cifar10(partition_id=0, num_clients=10)
-    net = CNet().to("cpu")
-
-    for epoch in range(10):
-        train(net, trainloader, 1)
-        loss, accuracy = test(net, valloader)
-        print(f"Epoch {epoch+1}: validation loss {loss}, accuracy {accuracy}")
-
-    loss, accuracy = test(net, testloader)
-    print(f"Final test set performance:\n\tloss {loss}\n\taccuracy {accuracy}")
+    run_simulation(
+        server_app=server,
+        client_app=client,
+        num_supernodes=10,
+        backend_config={"client_resources": {"num_cpus": 1, "num_gpus": 0.0}}
+    )

@@ -2,8 +2,10 @@ from flwr_datasets import FederatedDataset
 from torchvision.transforms import transforms
 from torch.utils.data import DataLoader
 
-def load_cifar10(partition_id: int, num_clients: int):
-    dataset = FederatedDataset(dataset="cifar10", partitioners={'train': num_clients})
+NUM_CLIENTS = 5
+
+def load_cifar10(partition_id: int):
+    dataset = FederatedDataset(dataset="cifar10", partitioners={'train': NUM_CLIENTS})
     partition = dataset.load_partition(partition_id)
 
     train_test = partition.train_test_split(test_size=0.2, seed=42)
